@@ -132,5 +132,7 @@ Type "help()" for more information.
 
 Oder Internet Suche nach ` raspberry pico pin diagram official `
 
-'
+## Anleitung zum internen Temperatur Sensor
+
+[Anleitung im Temperatur Kompendium](https://www.elektronik-kompendium.de/sites/raspberry-pi/2612121.htm)
 
