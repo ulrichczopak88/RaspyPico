@@ -91,3 +91,40 @@ Warum `{{...}}` im inneren `print(f"...")`?
 - Mit doppelten Klammern bleiben die Platzhalter fuer den Pico erhalten.
 - Ohne doppelte Klammern versucht das Notebook, z. B. `{t}`, selbst auszuwerten (`NameError` moeglich).
 
+## LED ein/aus schalten und Temperatur lesen im Terminal
+
+'
+PS C:\Users\UlrichLehre\Documents\RaspyPico> & c:\Users\UlrichLehre\Documents\RaspyPico\.venv\Scripts\Activate.ps1
+(raspypico-notebook) PS C:\Users\UlrichLehre\Documents\RaspyPico> mpremote connect auto
+Connected to MicroPython at COM4
+Use Ctrl-] or Ctrl-x to exit this shell
+MicroPython v1.28.0 on 2026-04-06; Raspberry Pi Pico with RP2040
+Type "help()" for more information.
+>>> from machine import Pin
+
+>>> led = Pin("LED", Pin.OUT)
+
+>>> led.toggle()
+
+>>> led.toggle()
+
+>>> from machine import ADC
+
+>>> sensor = ADC(4)
+
+>>> raw = sensor.read_u16()
+
+>>> print(raw)
+14195
+
+>>> voltage = raw * 3.3 / 65535
+
+>>> temp_c = 27 - (voltage - 0.706) / 0.001721
+
+>>> print(temp_c)
+
+21.894816
+>>>
+
+'
+
