@@ -21,7 +21,7 @@ Verdrahtung zum Pico:
 
 - DS18B20 `GND` -> Pico `GND`
 - DS18B20 `VDD` -> Pico `3V3(OUT)`
-- DS18B20 `DQ` -> Pico `GP2` (frei waehlbar)
+- DS18B20 `DQ` -> Pico `GP3` (frei waehlbar)
 - Widerstand `4.7 kOhm` zwischen `DQ` und `3V3(OUT)`
 
 Wichtig:
@@ -40,12 +40,12 @@ Wichtig:
 ```text
 Raspberry Pi Pico (relevante Pins)
 
-GP2      -> Datenleitung DS18B20 (DQ)
+GP3      -> Datenleitung DS18B20 (DQ)
 3V3(OUT)  -> Versorgung DS18B20 (VDD)
 GND       -> Masse DS18B20 (GND)
 ```
 
-Hinweis: Bei Pico/Pico W ist `GP2` der physische Pin `4`. `3V3(OUT)` ist Pin `36`.
+Hinweis: Bei Pico/Pico W ist `GP3` der physische Pin `5`. `3V3(OUT)` ist Pin `36`.
 `GND` kannst du jeden GND-Pin nehmen (z. B. Pin `18`, `23`, `38`).
 
 ### 2) Breadboard-Ansicht (170 Kontakte)
@@ -74,7 +74,7 @@ Bein rechts  (VDD) -> E12
 
 Jumper zum Pico:
 - E10 -> Pico GND
-- E11 -> Pico GP2
+- E11 -> Pico GP3
 - E12 -> Pico 3V3(OUT)
 
 Widerstand 4.7 kOhm:
@@ -82,7 +82,7 @@ Widerstand 4.7 kOhm:
 - anderes Ende in E12 (3V3)
 ```
 
-Wenn du lieber einen anderen GPIO nutzen willst, nur `GP2` in Hardware und Code anpassen.
+Wenn du lieber einen anderen GPIO nutzen willst, nur `GP3` in Hardware und Code anpassen.
 
 ## Wie es funktioniert (kurz)
 
@@ -105,7 +105,7 @@ Dann im REPL:
 from machine import Pin
 import onewire, ds18x20, time
 
-ow = onewire.OneWire(Pin(2))
+ow = onewire.OneWire(Pin(3))
 ds = ds18x20.DS18X20(ow)
 roms = ds.scan()
 print("Gefundene Sensoren:", roms)
@@ -144,7 +144,7 @@ my_pico.toggle_led(pico)
 ### 2) Direkt aus dem PC-Terminal (ein Befehl)
 
 ```powershell
-mpremote connect auto exec "from machine import Pin; import onewire, ds18x20, time; ow=onewire.OneWire(Pin(2)); ds=ds18x20.DS18X20(ow); roms=ds.scan(); print('ROMS', roms); (ds.convert_temp(), time.sleep_ms(750), print('TEMP_C', ds.read_temp(roms[0]))) if roms else print('TEMP_C', 'kein sensor')"
+mpremote connect auto exec "from machine import Pin; import onewire, ds18x20, time; ow=onewire.OneWire(Pin(3)); ds=ds18x20.DS18X20(ow); roms=ds.scan(); print('ROMS', roms); (ds.convert_temp(), time.sleep_ms(750), print('TEMP_C', ds.read_temp(roms[0]))) if roms else print('TEMP_C', 'kein sensor')"
 ```
 
 ## Testdatei direkt starten
@@ -156,6 +156,6 @@ mpremote connect auto run ds18b20/ds18b20_test.py
 ## Typische Fehler
 
 - Kein `4.7 kOhm` Pull-up -> keine stabilen Messwerte oder kein Sensor gefunden.
-- Falsche Pin-Nummer im Code (`Pin(2)` muss zu deiner Verkabelung passen).
+- Falsche Pin-Nummer im Code (`Pin(3)` muss zu deiner Verkabelung passen).
 - Sensor verpolt (Pin-Reihenfolge am TO-92 falsch gelesen).
 - Kein MicroPython auf dem Pico oder keine USB-Verbindung.

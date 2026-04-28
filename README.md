@@ -15,7 +15,7 @@ Die wichtigsten Dateien:
 
 - `my_pico.py`
   - baut eine dauerhafte Verbindung zum Pico auf
-  - liest den DS18B20 an `GP2`
+  - liest den DS18B20 an `GP3`
   - liest die interne RP2040-Temperatur
   - schaltet die Board-LED
 
@@ -41,7 +41,7 @@ Kurzfassung:
 
 - DS18B20 `GND` -> Pico `GND`
 - DS18B20 `VDD` -> Pico `3V3(OUT)`
-- DS18B20 `DQ` -> Pico `GP2`
+- DS18B20 `DQ` -> Pico `GP3`
 - `4.7 kOhm` Pull-up-Widerstand zwischen `DQ` und `3V3(OUT)`
 
 Wichtig: Der Pico arbeitet mit `3.3 V`, nicht mit `5 V`.
@@ -115,7 +115,6 @@ In der App kannst du:
 
 - den Port waehlen, normalerweise `auto`
 - das Messintervall einstellen, z. B. `0.2 s`
-- die DS18B20-Aufloesung waehlen
 - DS18B20 und interne Pico-Temperatur in getrennten Plots ansehen
 - die Board-LED ein- und ausschalten
 

@@ -34,14 +34,13 @@ def reset_measurements():
     st.session_state.last_message = ""
 
 
-def connect_pico(port, data_pin, resolution):
+def connect_pico(port, data_pin):
     # Alte Verbindung schliessen, falls schon eine offen war.
     disconnect_pico(clear_message=False)
 
     st.session_state.pico = my_pico.connect(
         port,
         data_pin=data_pin,
-        ds18b20_resolution=resolution,
     )
     st.session_state.led_on = my_pico.get_led(st.session_state.pico)
     st.session_state.running = False
@@ -137,8 +136,8 @@ def take_live_sample(delay_s, max_samples):
     loop_start = time.time()
 
     try:
-        # Der DS18B20 braucht je nach Aufloesung Messzeit.
-        # Bei 10 Bit sind 0.2 s ein guter schneller Wert.
+        # Der DS18B20 braucht nach convert_temp() kurz Messzeit.
+        # Wenn Werte fehlen, das Intervall testweise auf 0.75 s stellen.
         wait_s = max(0.05, min(float(delay_s), 0.75))
         ds18b20_temp, internal_temp = my_pico.get_temps(pico, wait=wait_s)
     except Exception as exc:
@@ -167,8 +166,7 @@ st.title("Raspberry Pi Pico - Live Temperatur")
 st.caption("DS18B20, interne RP2040-Temperatur und Board-LED")
 
 port = st.sidebar.text_input("Port", value="auto")
-data_pin = st.sidebar.number_input("DS18B20 GPIO", min_value=0, max_value=28, value=2, step=1)
-resolution = st.sidebar.select_slider("DS18B20 Aufloesung", options=[9, 10, 11, 12], value=10)
+data_pin = st.sidebar.number_input("DS18B20 GPIO", min_value=0, max_value=28, value=3, step=1)
 delay_s = st.sidebar.number_input(
     "Messintervall [s]",
     min_value=0.2,
@@ -198,7 +196,7 @@ connect_col, led_col, run_col = st.columns(3)
 with connect_col:
     if st.button("Verbinden", disabled=st.session_state.running, use_container_width=True):
         try:
-            connect_pico(port, int(data_pin), int(resolution))
+            connect_pico(port, int(data_pin))
             st.rerun()
         except Exception as exc:
             st.session_state.pico = None

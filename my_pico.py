@@ -11,7 +11,6 @@ class Pico:
     # Kleine Huelle um die serielle Verbindung zum Pico.
     transport: SerialTransport
     data_pin: int = 2
-    ds18b20_resolution: int = 10
     sensor_ready: bool = False
     led_ready: bool = False
 
@@ -44,7 +43,7 @@ def _find_auto_port():
     raise RuntimeError("Kein Pico gefunden. Ist er per USB verbunden?")
 
 
-def connect(device="auto", data_pin=2, ds18b20_resolution=10):
+def connect(device="auto", data_pin=3):
     """Verbindung zum Pico aufbauen und fuer schnelle Befehle vorbereiten."""
     if device == "auto":
         device = _find_auto_port()
@@ -59,27 +58,11 @@ def connect(device="auto", data_pin=2, ds18b20_resolution=10):
     return Pico(
         transport=transport,
         data_pin=data_pin,
-        ds18b20_resolution=ds18b20_resolution,
     )
-
-
-def _ds18b20_config(resolution):
-    # DS18B20-Aufloesung:
-    # 9 Bit ist am schnellsten, 12 Bit am genauesten.
-    configs = {
-        9: 0x1F,
-        10: 0x3F,
-        11: 0x5F,
-        12: 0x7F,
-    }
-    if resolution not in configs:
-        raise ValueError("ds18b20_resolution muss 9, 10, 11 oder 12 sein")
-    return configs[resolution]
 
 
 def _setup_sensor(pico):
     # Sensor-Objekte einmal auf dem Pico anlegen und das ROM merken.
-    config = _ds18b20_config(pico.ds18b20_resolution)
     code = f"""
 from machine import Pin
 import onewire, ds18x20
@@ -89,12 +72,6 @@ _roms = _ds.scan()
 if not _roms:
     raise Exception("Kein DS18B20 Sensor an GP{pico.data_pin} gefunden")
 _rom = _roms[0]
-_ow.reset()
-_ow.select_rom(_rom)
-_ow.writebyte(0x4E)
-_ow.writebyte(75)
-_ow.writebyte(70)
-_ow.writebyte({config})
 """
     _exec(pico, code)
     pico.sensor_ready = True

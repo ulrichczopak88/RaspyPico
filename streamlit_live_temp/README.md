@@ -2,7 +2,7 @@
 
 Diese App zeigt eine **sehr einfache Live-Messung** mit Streamlit:
 
-- DS18B20-Temperatur an GP2
+- DS18B20-Temperatur an GP3
 - interne RP2040-Temperatur
 - Board-LED ein- und ausschalten
 
@@ -26,7 +26,7 @@ uv run streamlit run streamlit_live_temp/app.py
 
 ## Verschaltung
 
-Die App erwartet den DS18B20 standardmaessig an `GP2`.
+Die App erwartet den DS18B20 standardmaessig an `GP3`.
 
 ![Aktuelle DS18B20-Verschaltung](../documentation/PXL_20260428_125258174.MP.jpg)
 
@@ -34,7 +34,7 @@ Kurzfassung:
 
 - DS18B20 `GND` -> Pico `GND`
 - DS18B20 `VDD` -> Pico `3V3(OUT)`
-- DS18B20 `DQ` -> Pico `GP2`
+- DS18B20 `DQ` -> Pico `GP3`
 - `4.7 kOhm` Pull-up-Widerstand zwischen `DQ` und `3V3(OUT)`
 
 ## Verwendete Pakete und warum
@@ -59,5 +59,5 @@ Kurzfassung:
 - Beim ersten Streamlit-Start kann eine E-Mail-Abfrage erscheinen; einfach leer lassen und mit Enter bestaetigen.
 - `Port = auto` funktioniert meist direkt.
 - Falls noetig, einen festen Port setzen (z. B. `COM4`).
-- Fuer `0.2 s` Messintervall nutzt die App standardmaessig 10 Bit DS18B20-Aufloesung.
+- Wenn die DS18B20-Werte instabil sind, das Messintervall testweise auf `0.75 s` stellen.
 - Die Formel fuer `temp_c` ist die uebliche RP2040-Naehungsformel und dient als schneller Start.
