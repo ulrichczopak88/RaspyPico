@@ -5,6 +5,46 @@ Dieses Projekt ist absichtlich minimal:
 - USB-Verbindung zum Raspberry Pi Pico (MicroPython)
 - Code aus einem Notebook auf dem Pico ausfuehren
 - LED-Blink-Test
+- DS18B20-Temperatur ueber `my_pico.py` lesen
+- Live-Plot im Notebook und in Streamlit
+- Board-LED aus Streamlit ein- und ausschalten
+
+## Aktueller Stand
+
+Die wichtigsten Dateien:
+
+- `my_pico.py`
+  - baut eine dauerhafte Verbindung zum Pico auf
+  - liest den DS18B20 an `GP2`
+  - liest die interne RP2040-Temperatur
+  - schaltet die Board-LED
+
+- `pico_live_plot.ipynb`
+  - einfaches Notebook mit Live-Plot fuer den DS18B20
+
+- `streamlit_live_temp/app.py`
+  - Streamlit-App mit zwei Live-Plots
+  - DS18B20-Plot und interner Pico-Temperatur-Plot getrennt
+  - Messintervall einstellbar, ab `0.2 s`
+  - Button fuer LED ein/aus
+
+- `ds18b20/README.md`
+  - Verdrahtung und Terminal-Test fuer den DS18B20
+
+## Aktuelle Verschaltung
+
+Foto der aktuellen DS18B20-Verschaltung:
+
+![Aktuelle DS18B20-Verschaltung](documentation/PXL_20260428_125258174.MP.jpg)
+
+Kurzfassung:
+
+- DS18B20 `GND` -> Pico `GND`
+- DS18B20 `VDD` -> Pico `3V3(OUT)`
+- DS18B20 `DQ` -> Pico `GP2`
+- `4.7 kOhm` Pull-up-Widerstand zwischen `DQ` und `3V3(OUT)`
+
+Wichtig: Der Pico arbeitet mit `3.3 V`, nicht mit `5 V`.
 
 ## 1) Voraussetzungen
 
@@ -55,6 +95,29 @@ Offizielle Doku:
 - `test_pico.ipynb` oeffnen
 - Kernel: **Python (raspypico)** waehlen
 - Zellen von oben nach unten ausfuehren
+
+Fuer den Live-Plot:
+
+- `pico_live_plot.ipynb` oeffnen
+- zuerst die Import-Zelle ausfuehren
+- dann mit `my_pico.connect("auto")` verbinden
+- danach die Live-Plot-Zelle starten
+
+## 4) Streamlit Live-App starten
+
+```powershell
+uv run streamlit run streamlit_live_temp/app.py
+```
+
+Die App verwendet das Backend aus `my_pico.py`. Dadurch bleibt die Verbindung zum Pico offen und die Messung ist deutlich schneller als ein neuer `mpremote`-Start pro Messwert.
+
+In der App kannst du:
+
+- den Port waehlen, normalerweise `auto`
+- das Messintervall einstellen, z. B. `0.2 s`
+- die DS18B20-Aufloesung waehlen
+- DS18B20 und interne Pico-Temperatur in getrennten Plots ansehen
+- die Board-LED ein- und ausschalten
 
 ## Hinweise
 
@@ -135,4 +198,3 @@ Oder Internet Suche nach ` raspberry pico pin diagram official `
 ## Anleitung zum internen Temperatur Sensor
 
 [Anleitung im Temperatur Kompendium](https://www.elektronik-kompendium.de/sites/raspberry-pi/2612121.htm)
-

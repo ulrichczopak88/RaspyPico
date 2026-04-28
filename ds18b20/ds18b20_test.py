@@ -6,7 +6,6 @@ mpremote connect auto run ds18b20/ds18b20_test.py
 """
 
 from machine import Pin
-import onewire
 import ds18x20
 import time
 

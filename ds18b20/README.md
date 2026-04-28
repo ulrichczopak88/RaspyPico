@@ -29,6 +29,10 @@ Wichtig:
 - Der Pull-up-Widerstand ist bei OneWire noetig, damit die Datenleitung sauber auf HIGH gezogen wird.
 - Nutze fuer den Pico **3.3V**, nicht 5V.
 
+## Foto der aktuellen Verschaltung
+
+![Aktuelle DS18B20-Verschaltung](../documentation/PXL_20260428_125258174.MP.jpg)
+
 ## Grafik: Pico-Pins und Breadboard (Keyestudio 170)
 
 ### 1) Pico-Pins (relevanter Ausschnitt)
@@ -112,6 +116,31 @@ if roms:
     print("Temperatur:", ds.read_temp(roms[0]), "C")
 ```
 
+## Einfacher Python-Import im Notebook
+
+Das Backend liegt im Projektroot in `my_pico.py`.
+
+```python
+import my_pico
+
+pico = my_pico.connect("auto")
+temp = my_pico.get_temp(pico)
+internal = my_pico.get_internal_temp(pico)
+
+print(temp, internal)
+
+my_pico.disconnect(pico)
+```
+
+Fuer schnelle Live-Messungen gibt es ausserdem:
+
+```python
+ds18b20_temp, internal_temp = my_pico.get_temps(pico, wait=0.2)
+my_pico.toggle_led(pico)
+```
+
+`get_temp()` und `get_temps()` fuehren jedes Mal neu `convert_temp()` aus, damit ein frischer DS18B20-Wert gelesen wird.
+
 ### 2) Direkt aus dem PC-Terminal (ein Befehl)
 
 ```powershell
@@ -130,5 +159,3 @@ mpremote connect auto run ds18b20/ds18b20_test.py
 - Falsche Pin-Nummer im Code (`Pin(2)` muss zu deiner Verkabelung passen).
 - Sensor verpolt (Pin-Reihenfolge am TO-92 falsch gelesen).
 - Kein MicroPython auf dem Pico oder keine USB-Verbindung.
-
-
